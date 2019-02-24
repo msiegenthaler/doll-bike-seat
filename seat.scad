@@ -1,10 +1,11 @@
+version = "4";
 include <engraving.scad>
-version = "3";
+include <screw.scad>
 
 seat_width = 130;
 seat_depth = 90;
 seat_round_depth = 17;
-base_thickness = 5;
+base_thickness = 8;
 feet_middle_d = 20;
 feet_middle_f = 1.5;
 
@@ -14,9 +15,42 @@ back_thickness = 3;
 
 protection_thickness = 3.9;
 
-base();
-back();
-side_protections();
+bar_h = 4.5;
+
+seat();
+holder();
+// TODO: belt
+
+module seat() {
+  base();
+  back();
+  side_protections();
+}
+
+module holder() {
+  y_inset = 12;
+  y_offset = (seat_depth-seat_round_depth)/2-y_inset;
+  color("green") difference() {
+    translate([0,-y_offset,-base_thickness])
+      holder_base(y_inset);
+    screws_negative();
+  }
+}
+module holder_base(y_inset) {
+  x = 30;
+  z = bar_h;
+  l = 40;
+  h_y = 30;
+
+  difference() {
+    hull() {
+      translate([-x/2, 0,-z])
+        cube([x, l, z]);
+      translate([-x/2, l, -0.1])
+        cube([x, h_y, 0.1]);
+    }
+  }
+}
 
 module side_protections() {
   intersection() {
@@ -53,10 +87,25 @@ module side_protection() {
 module base() {
   base_stopper();
   difference() {
-    translate([0,0,-base_thickness]) linear_extrude(base_thickness) base_2d();
+    translate([0,0,-base_thickness]) linear_extrude(base_thickness)
+      base_2d();
     ass_dents_negative();
-    translate([0,-seat_depth/2+10,-base_thickness]) engraving("seat");
+    translate([0,-seat_depth/2+10,-base_thickness])
+      engraving("seat");
+    screws_negative();
   }
+}
+
+module screws_negative() {
+  l = base_thickness + bar_h;
+  sink1 = 1.6;
+  translate([0,-9.5,-l])
+    screw_negative(l-sink1, top=true, bottom=true, extend_top=10, extend_bottom=1);
+  sink2 = 2.8;
+  translate([7.5,10.5,-l]) rotate([0,0,90])
+    screw_negative(l-sink2, top=true, bottom=true, extend_top=10, extend_bottom=1);
+  translate([-7.5,10.5,-l]) rotate([0,0,90])
+    screw_negative(l-sink2, top=true, bottom=true, extend_top=10, extend_bottom=1);
 }
 
 module base_stopper() {
@@ -74,7 +123,7 @@ module base_stopper() {
 }
 
 module ass_dents_negative() {
-  translate([0,14,1.1]) scale([1,0.53,0.1]) sphere(d=seat_width*0.8);
+  translate([0,14,1.1]) scale([1,0.53,0.08]) sphere(d=seat_width*0.8);
   translate([-seat_width/4,0,0]) leg_dent_negative();
   translate([+seat_width/4,0,0]) leg_dent_negative();
 }
