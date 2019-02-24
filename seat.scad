@@ -18,15 +18,26 @@ protection_thickness = 3.9;
 bar_h = 4.5;
 
 seat();
-holder();
-// TODO: belt
+*holder();
 
 module seat() {
-  base();
+  difference() {
+    base();
+    belt_negative();
+  }
   back();
   side_protections();
 }
 
+module belt_negative() {
+  belt_w = 12;
+  belt_t = 2;
+  y = -10.1 + seat_depth/2-belt_w;
+  translate([-seat_width/2+protection_thickness, y,-50])
+    cube([belt_t,belt_w,100]);
+  translate([seat_width/2-protection_thickness-belt_t, y,-50])
+    cube([belt_t,belt_w,100]);
+}
 module holder() {
   y_inset = 12;
   y_offset = (seat_depth-seat_round_depth)/2-y_inset;
