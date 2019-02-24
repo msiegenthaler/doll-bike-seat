@@ -1,4 +1,5 @@
-version = "1";
+include <engraving.scad>
+version = "2";
 
 seat_width = 130;
 seat_depth = 90;
@@ -63,10 +64,4 @@ module base_2d() {
     translate([-seat_width/4,-y_offset-feet_indent_d/5,0]) scale([1.5,1])
       circle(d=feet_indent_d);
   }
-}
-
-module engraving(name) {
-  txt = str(name, " v", version);
-  linear_extrude(0.2) mirror([1,0,0])
-    text(txt, size=3, halign="center", valign="center");
 }

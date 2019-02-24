@@ -1,4 +1,5 @@
 version = "4";
+include <engraving.scad>
 
 top_gap = 65.5;
 bottom_gap = 42.5;
@@ -41,12 +42,6 @@ module case_bottom() {
       screw_negative(min_thickness+pipe_r, bottom=true);
     engraving("case bottom");
   }
-}
-
-module engraving(name) {
-  txt = str(name, " v", version);
-  linear_extrude(0.2) mirror([1,0,0])
-    text(txt, size=3, halign="center", valign="center");
 }
 
 module basic_case() {
