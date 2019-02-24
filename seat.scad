@@ -136,14 +136,21 @@ module leg_dent_negative() {
 module back() {
   back_y_delta = tan(back_angle) * back_height;
   asymetic = 5;
-  translate([0,-asymetic,0]) difference() {
-    hull() {
-      translate([0,asymetic,0]) linear_extrude(1) back_2d();
-      translate([0,back_y_delta, back_height]) linear_extrude(1) back_2d();
+  rounder_r = 120; rounder_s=0.8;
+  intersection() {
+    translate([0,-asymetic,0]) difference() {
+      hull() {
+        translate([0,asymetic,0]) linear_extrude(1) back_2d();
+        translate([0,back_y_delta, back_height]) linear_extrude(1) back_2d();
+      }
+      translate([0,-back_thickness,0]) hull() {
+        linear_extrude(1) back_2d();
+        translate([0,back_y_delta, back_height]) linear_extrude(1) back_2d();
+      }
     }
-    translate([0,-back_thickness,0]) hull() {
-      linear_extrude(1) back_2d();
-      translate([0,back_y_delta, back_height]) linear_extrude(1) back_2d();
+    union() {
+      translate([0,200,back_height-rounder_r]) scale([rounder_s, 1,1]) rotate([90,0,0]) cylinder(r=rounder_r, h=200, $fa=5);
+      translate([-100,0,0]) cube([200,200,back_height/2]);
     }
   }
 }
