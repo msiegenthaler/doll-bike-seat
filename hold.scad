@@ -1,3 +1,4 @@
+version = "4";
 
 top_gap = 65.5;
 bottom_gap = 42.5;
@@ -11,10 +12,8 @@ side_protrusion_bottom = 13;
 screw_offset_x = bottom_gap/2 + 15.5;
 min_thickness = 4;
 
-
 // case_top();
 case_bottom();
-
 
 module case_top() {
   difference() {
@@ -26,6 +25,7 @@ module case_top() {
       screw_negative(min_thickness+pipe_r, top=true);
     translate([-screw_offset_x, -height/4, 0])
       screw_negative(min_thickness+pipe_r, top=true);
+    engraving("case top");
   }
 }
 
@@ -39,7 +39,14 @@ module case_bottom() {
       screw_negative(min_thickness+pipe_r, bottom=true);
     translate([-screw_offset_x, -height/4, 0]) rotate([0,0,-82])
       screw_negative(min_thickness+pipe_r, bottom=true);
+    engraving("case bottom");
   }
+}
+
+module engraving(name) {
+  txt = str(name, " v", version);
+  linear_extrude(0.2) mirror([1,0,0])
+    text(txt, size=3, halign="center", valign="center");
 }
 
 module basic_case() {
