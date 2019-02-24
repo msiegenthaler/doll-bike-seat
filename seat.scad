@@ -1,5 +1,5 @@
 include <engraving.scad>
-version = "2";
+version = "3";
 
 seat_width = 130;
 seat_depth = 90;
@@ -12,8 +12,43 @@ back_height = 170;
 back_angle = 15;
 back_thickness = 3;
 
+protection_thickness = 3.9;
+
 base();
 back();
+side_protections();
+
+module side_protections() {
+  intersection() {
+    union() {
+      translate([seat_width/2-protection_thickness,0,0])
+        side_protection();
+      translate([-seat_width/2,0,0])
+        side_protection();
+    }
+    hull() {
+      linear_extrude(100) base_2d();
+      back();
+    }
+  }
+}
+
+module side_protection() {
+  x_offset = 0;
+  y_offset = -(seat_depth-seat_round_depth)/2;
+
+  h = 35;
+  d_plus = h*1.5;
+  r1 = h;
+  r2 = 20;
+
+  translate([x_offset,y_offset+r1,0])
+    cube([protection_thickness,seat_depth+d_plus-r1,h]);
+  translate([x_offset,y_offset+r1,0])
+    rotate([0,90,0]) cylinder(r=r1,h=protection_thickness);
+  translate([x_offset,seat_depth/2,h]) rotate([30,0,0])
+    rotate([0,90,0]) scale([1,1.7,1]) cylinder(r=r2,h=protection_thickness);
+}
 
 module base() {
   base_stopper();
