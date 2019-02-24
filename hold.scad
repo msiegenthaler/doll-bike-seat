@@ -9,11 +9,12 @@ pipe_r_gap = 0.5;
 side_protrusion_top = 5;
 side_protrusion_bottom = 13;
 screw_offset_x = bottom_gap/2 + 15.5;
-min_thickness = 2;
+min_thickness = 4;
 
 
-case_top();
-// case_bottom();
+// case_top();
+case_bottom();
+
 
 module case_top() {
   difference() {
