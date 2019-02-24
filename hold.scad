@@ -1,4 +1,4 @@
-version = "4";
+version = "5";
 include <engraving.scad>
 include <screw.scad>
 
@@ -32,15 +32,16 @@ module case_top() {
 }
 
 module case_bottom() {
+  screw_l = min_thickness+pipe_r;
   difference() {
     basic_case();
     pipe_slots();
-    translate([0, height/4, 0])
-      screw_negative(min_thickness+pipe_r, bottom=true);
-    translate([screw_offset_x, -height/4, 0]) rotate([0,0,82])
-      screw_negative(min_thickness+pipe_r, bottom=true);
-    translate([-screw_offset_x, -height/4, 0]) rotate([0,0,-82])
-      screw_negative(min_thickness+pipe_r, bottom=true);
+    #translate([0, height/4, screw_l]) mirror([0,0,1])
+      screw_negative(screw_l, bottom=true);
+    translate([screw_offset_x, -height/4, screw_l]) rotate([0,0,82]) mirror([0,0,1])
+      screw_negative(screw_l, bottom=true);
+    translate([-screw_offset_x, -height/4, screw_l]) rotate([0,0,-82]) mirror([0,0,1])
+      screw_negative(screw_l, bottom=true);
     engraving("case bottom");
   }
 }
