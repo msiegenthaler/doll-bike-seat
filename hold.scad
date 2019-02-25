@@ -1,4 +1,4 @@
-version = "5";
+version = "6";
 include <engraving.scad>
 include <screw.scad>
 
@@ -14,16 +14,18 @@ side_protrusion_bottom = 13;
 screw_offset_x = bottom_gap/2 + 15.5;
 min_thickness = 4;
 
-rod_w = 10;
-rod_h = 10;
+rod_in_w = 10;
+rod_in_h = 10;
 rod_holder_wall = 1.5;
+rod_outset = rod_holder_wall;
 rod_holder_len = 40;
 rod_gap = 0.2;
 rod_angle = 90-48;
 
 
-case_top();
 // case_bottom();
+// case_top();
+rod();
 
 module case_top() {
   difference() {
@@ -33,7 +35,7 @@ module case_top() {
     }
     pipe_slots();
     top_screws_negative();
-    rod(rod_gap);
+    rod_in_case(rod_gap);
     translate([0,0,-50]) cube([100,100,100], center=true);
     engraving("case top");
   }
@@ -41,8 +43,8 @@ module case_top() {
 
 module rod_holder() {
   d = min_thickness+pipe_r;
-  w = rod_w + (rod_holder_wall+rod_gap)*2;
-  h = rod_h + (rod_holder_wall+rod_gap)*2;
+  w = rod_in_w + (rod_holder_wall+rod_gap)*2;
+  h = rod_in_h + (rod_holder_wall+rod_gap)*2;
   translate([-w/2,-height/2,0]) translate([0,0,d]) rotate([-rod_angle,0,0])
     cube([w,h,rod_holder_len]);
 
@@ -52,14 +54,36 @@ module rod_holder() {
     cube([w,h2,l2]);
 }
 
-module rod(enlarge=0) {
+module rod() {
+  rod_distance = 0.3;
+  difference() {
+    rod_in_case(rod_distance=rod_distance, enlarge=0);
+    translate([-rod_in_w/2,10,25]) rotate([-rod_angle,0,0]) rotate([0,90,0])
+      engraving("rod");
+  }
+
   d = min_thickness+pipe_r;
-  rod_distance = 0;
-  w = rod_w + enlarge*2;
-  h = rod_h + enlarge*2;
-  color("red") difference() {
-    translate([-w/2,-height/2+rod_holder_wall*1.3,0]) translate([0,0,d]) rotate([-rod_angle,0,0])
-      cube([w,h,40]);
+  w = rod_in_w + rod_outset*2;
+  h = rod_in_h + rod_outset*2;
+  
+  difference() {
+    translate([-w/2,-height/2+rod_outset*0.33,0]) translate([0,0,d]) rotate([-rod_angle,0,0])
+      cube([w,h,45]);
+    rod_in_case(rod_distance=rod_distance, enlarge=rod_gap);
+    case_top();
+    rotate([-rod_angle,0,0]) translate([0,0,-15])
+      cube([100,100,100], center=true);
+  }
+}
+
+module rod_in_case(enlarge=0, rod_distance=0) {
+  l = 40;
+  d = min_thickness+pipe_r;
+  w = rod_in_w + enlarge*2;
+  h = rod_in_h + enlarge*2;
+  difference() {
+    translate([-w/2,-height/2+rod_holder_wall*1.3-enlarge*1.3,0]) translate([0,0,d]) rotate([-rod_angle,0,0])
+      cube([w,h,l]);
     cube([top_gap, height, (d+rod_distance)*2], center=true);
   }
 }
