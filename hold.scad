@@ -1,4 +1,4 @@
-version = "6";
+version = "7";
 include <engraving.scad>
 include <screw.scad>
 
@@ -21,6 +21,12 @@ rod_outset = rod_holder_wall;
 rod_holder_len = 40;
 rod_gap = 0.2;
 rod_angle = 90-48;
+rod_delta_h = -40;
+rod_low_l = 35;
+rod_up_l = 110;
+rod_high_l = 10;
+rod_top_inside = 20;
+rod_top_screw_in = 8;
 
 
 // case_bottom();
@@ -55,24 +61,42 @@ module rod_holder() {
 }
 
 module rod() {
-  rod_distance = 0.3;
+  y_offset = -height/2+rod_outset*0.33;
   difference() {
-    rod_in_case(rod_distance=rod_distance, enlarge=0);
+    union() {
+      rod_in_case();
+      rod_1(y_offset);
+    }
+    top_screws_negative();
+    case_top();
     translate([-rod_in_w/2,10,25]) rotate([-rod_angle,0,0]) rotate([0,90,0])
       engraving("rod");
   }
+}
 
+module rod_1(y_offset) {
   d = min_thickness+pipe_r;
-  w = rod_in_w + rod_outset*2;
-  h = rod_in_h + rod_outset*2;
-  
-  difference() {
-    translate([-w/2,-height/2+rod_outset*0.33,0]) translate([0,0,d]) rotate([-rod_angle,0,0])
-      cube([w,h,45]);
-    rod_in_case(rod_distance=rod_distance, enlarge=rod_gap);
-    case_top();
-    rotate([-rod_angle,0,0]) translate([0,0,-15])
-      cube([100,100,100], center=true);
+  w = rod_in_w + 2*rod_outset;
+  h = rod_in_h + 2*rod_outset;
+  weird_l_delta = 0.4;
+  translate([w/2,y_offset,d]) rotate([-rod_angle,0,0]) rotate([0,-90, 0]) {
+    translate([rod_holder_len-weird_l_delta,0,0]) linear_extrude(w) translate([0,-rod_delta_h]) {
+      polygon(points=[[0,rod_delta_h],    [rod_low_l,rod_delta_h],
+        [rod_low_l+rod_up_l,0],            [rod_low_l+rod_up_l+rod_high_l,0],
+        [rod_low_l+rod_up_l+rod_high_l,h], [rod_low_l+rod_up_l,h],
+        [rod_low_l,rod_delta_h+h],         [0, rod_delta_h+h]]);
+    }
+  }
+
+  // top bolt
+  z = rod_holder_len-weird_l_delta+rod_low_l+rod_up_l+rod_high_l;
+  translate([0,y_offset,d]) rotate([-rod_angle,0,0]) {
+    translate([-rod_in_w/2,-rod_delta_h+rod_outset,z])
+      difference() {
+        cube([rod_in_w,rod_in_h,rod_top_inside]);
+        translate([0,rod_in_h/2,rod_top_screw_in]) rotate([0,90,0])
+        screw_negative(rod_in_h);
+      }
   }
 }
 
