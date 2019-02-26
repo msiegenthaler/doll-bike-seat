@@ -1,0 +1,13 @@
+rod_in_w = 10;
+rod_in_h = 10;
+rod_holder_wall = 1.5;
+rod_outset = rod_holder_wall;
+rod_holder_len = 40;
+rod_gap = 0.2;
+rod_angle = 90-48;
+rod_delta_h = -40;
+rod_low_l = 35;
+rod_up_l = 110;
+rod_high_l = 10;
+rod_top_inside = 20;
+rod_top_screw_in = 8;
