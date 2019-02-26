@@ -10,4 +10,4 @@ rod_low_l = 5;
 rod_up_l = 110;
 rod_high_l = 10;
 rod_top_inside = 25;
-rod_top_screw_in = 8;
+rod_top_screw_in = 15;

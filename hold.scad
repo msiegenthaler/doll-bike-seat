@@ -1,4 +1,4 @@
-version = "8";
+version = "9";
 include <engraving.scad>
 include <screw.scad>
 
@@ -81,8 +81,8 @@ module rod_1(y_offset) {
     translate([-rod_in_w/2,-rod_delta_h+rod_outset,z])
       difference() {
         cube([rod_in_w,rod_in_h,rod_top_inside]);
-        translate([0,rod_in_h/2,rod_top_screw_in]) rotate([0,90,0])
-        screw_negative(rod_in_h);
+        translate([rod_in_w/2,rod_in_h,rod_top_screw_in]) rotate([90,0,0])
+          screw_negative(rod_in_h);
       }
   }
 }
