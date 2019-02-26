@@ -50,8 +50,8 @@ module holder() {
     }
     translate([0,-y_offset,-base_thickness])
       rod_negative();
-    translate([0,-y_offset+holder_base_l/2,-base_thickness])
-      engraving("smnt");
+    translate([0,-y_offset+holder_base_l/2,-base_thickness-engraving_depth])
+      engraving("seat-mnt");
     screws_negative();
   }
 }
