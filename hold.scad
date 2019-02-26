@@ -1,4 +1,4 @@
-version = "7";
+version = "8";
 include <engraving.scad>
 include <screw.scad>
 
@@ -28,7 +28,7 @@ module case_top() {
     }
     pipe_slots();
     top_screws_negative();
-    rod_in_case(rod_gap);
+    rod_in_case(enlarge=rod_gap);
     translate([0,0,-50]) cube([100,100,100], center=true);
     engraving("case top");
   }
