@@ -1,4 +1,4 @@
-version = "4";
+version = "5";
 include <engraving.scad>
 include <screw.scad>
 
@@ -15,10 +15,12 @@ back_thickness = 3;
 
 protection_thickness = 3.9;
 
-bar_h = 4.5;
+include <rod.scad>
+screw_base = 4.5;
+holder_base_l = 40;
 
-seat();
-*holder();
+*seat();
+holder();
 
 module seat() {
   difference() {
@@ -41,26 +43,48 @@ module belt_negative() {
 module holder() {
   y_inset = 12;
   y_offset = (seat_depth-seat_round_depth)/2-y_inset;
-  color("green") difference() {
-    translate([0,-y_offset,-base_thickness])
+  difference() {
+    translate([0,-y_offset,-base_thickness]) {
       holder_base(y_inset);
+      holder_top();
+    }
+    translate([0,-y_offset,-base_thickness])
+      rod_negative();
+    translate([0,-y_offset+holder_base_l/2,-base_thickness])
+      engraving("smnt");
     screws_negative();
   }
 }
-module holder_base(y_inset) {
+module holder_base() {
   x = 30;
-  z = bar_h;
-  l = 40;
-  h_y = 30;
-
+  h_y = 15;
   difference() {
     hull() {
-      translate([-x/2, 0,-z])
-        cube([x, l, z]);
-      translate([-x/2, l, -0.1])
+      translate([-x/2, 0,-screw_base])
+        cube([x, holder_base_l, screw_base]);
+      translate([-x/2, holder_base_l, -0.1])
         cube([x, h_y, 0.1]);
     }
   }
+}
+
+module holder_top() {
+  x = rod_in_w+(rod_holder_wall+rod_gap)*2;
+  y = rod_top_inside + rod_gap + rod_holder_wall;
+  z = rod_in_h+rod_holder_wall+rod_gap*2;
+  x2 = 2.2;
+  hull() {
+    translate([-x/2,0,-screw_base-z])
+      cube([x,y,z]);
+    translate([-x2/2,0,-screw_base])
+      cube([x2,holder_base_l,screw_base]);
+  }
+}
+
+module rod_negative() {
+  z = -rod_in_h -screw_base -rod_gap;
+  translate([-rod_in_w/2,0,z])
+    cube([rod_in_w, rod_top_inside+rod_gap, rod_in_h]);
 }
 
 module side_protections() {
@@ -108,7 +132,7 @@ module base() {
 }
 
 module screws_negative() {
-  l = base_thickness + bar_h;
+  l = base_thickness + screw_base;
   sink1 = 1.6;
   translate([0,-9.5,-l])
     screw_negative(l-sink1, top=true, bottom=true, extend_top=10, extend_bottom=1);

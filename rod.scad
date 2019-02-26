@@ -9,5 +9,5 @@ rod_delta_h = -40;
 rod_low_l = 35;
 rod_up_l = 110;
 rod_high_l = 10;
-rod_top_inside = 20;
+rod_top_inside = 25;
 rod_top_screw_in = 8;
