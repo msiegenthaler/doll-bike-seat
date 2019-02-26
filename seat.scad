@@ -1,4 +1,4 @@
-version = "5";
+version = "6";
 include <engraving.scad>
 include <screw.scad>
 
@@ -82,9 +82,10 @@ module holder_top() {
 }
 
 module rod_negative() {
+  w = rod_in_w+rod_gap*2;
   z = -rod_in_h -screw_base -rod_gap;
-  translate([-rod_in_w/2,0,z])
-    cube([rod_in_w, rod_top_inside+rod_gap, rod_in_h]);
+  translate([-w/2,0,z])
+    cube([w, rod_top_inside+rod_gap, rod_in_h+rod_gap*2]);
 }
 
 module side_protections() {
