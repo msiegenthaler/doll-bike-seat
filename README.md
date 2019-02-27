@@ -4,6 +4,11 @@ OpenSCAD model for a bike seat for dolls for 3D printing.
 
 The seat fits a Kokua Like-to-Bike children bike.
 
+![Front](pictures/front.jpg)
+![Full](pictures/side_full.jpg)
+![Side](pictures/side.jpg)
+![Holder](pictures/mount.jpg)
+
 ## Printing
 
 All parts were printed using PET. PLA/ABS are not strong enough.
